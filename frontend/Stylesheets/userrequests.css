@@ -1,0 +1,79 @@
+.my-requests {
+  padding: 40px;
+}
+
+.my-requests h1 {
+  color: #9b0000;
+  margin-bottom: 10px;
+}
+
+.my-requests p {
+  margin-bottom: 25px;
+  color: #555;
+}
+
+/* Table Styling */
+.requests-table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+thead {
+  background: #9b0000;
+  color: white;
+}
+
+th, td {
+  text-align: center;
+  padding: 14px 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+tbody tr:hover {
+  background: #fff5f5;
+}
+
+/* Status Badges */
+.status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+}
+
+.status.pending {
+  background: #f6b93b;
+}
+
+.status.approved {
+  background: #27ae60;
+}
+
+.status.completed {
+  background: #2e86de;
+}
+
+.status.rejected {
+  background: #e74c3c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  th, td {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .my-requests {
+    padding: 20px;
+  }
+}
