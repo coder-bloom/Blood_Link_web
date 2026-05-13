@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Requests - BloodLink</title>
+  <link rel="stylesheet" href="./Stylesheets/userdashboard.css" />
+  <link rel="stylesheet" href="./Stylesheets/userrequests.css" />
+  <style>
+    /* Optional: Add some inline styling improvements */
+    .refresh-btn {
+      background-color: #e63946;
+      color: #fff;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: 0.2s ease;
+    }
+    .refresh-btn:hover {
+      background-color: #b91c1c;
+    }
+
+    .status {
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+    .status.pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .status.approved {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .status.rejected {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <img src="./images/blood drop.png" alt="Logo">
+      <h2><span>BLOOD</span>LINK</h2>
+    </div>
+
+    <nav class="nav-menu">
+      <a href="./userdashboard.html">🏠 Dashboard</a>
+      <a href="./request.html" >🩸 Request Blood</a>
+      <a href="./donate.html">❤️ Donate Blood</a>
+      <a href="./userrequests.html" class="active" >📋 My Requests</a>
+      <a href="./usersettings.html">⚙️ Settings</a>
+      <a href="#" onclick="logout()">🚪 Logout</a>
+    </nav>
+
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="my-requests">
+      <h1>📋 My Blood Requests</h1>
+      <p>Track and manage your past and ongoing blood requests.</p>
+
+      <button class="refresh-btn" onclick="fetchRequests()">🔄 Refresh</button>
+
+      <div class="requests-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Request ID</th>
+              <th>Blood Group</th>
+              <th>Hospital</th>
+              <th>Requested Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="requestsTableBody">
+            <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+<script src="./Scripts/userdashboard.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user) {
+        alert("Please log in first!");
+        window.location.href = "login.html";
+        return;
+      }
+      fetchRequests();
+    });
+
+    async function fetchRequests() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const tableBody = document.getElementById("requestsTableBody");
+      tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>`;
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/requests/${user._id || user.id}`, {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
+
+        const data = await res.json();
+        tableBody.innerHTML = "";
+
+        if (!Array.isArray(data) || data.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No requests found</td></tr>`;
+          return;
+        }
+
+        data.forEach((req, index) => {
+          const date = new Date(req.createdAt).toLocaleString();
+          const status = (req.status || "Pending").toLowerCase();
+
+          const row = `
+            <tr>
+              <td>#REQ-${index + 1001}</td>
+              <td>${req.bloodGroup || "N/A"}</td>
+              <td>${req.hospital || "N/A"}</td>
+              <td>${date}</td>
+              <td><span class="status ${status}">${req.status || "Pending"}</span></td>
+            </tr>
+          `;
+          tableBody.innerHTML += row;
+        });
+      } catch (err) {
+        console.error("Error fetching requests:", err);
+        tableBody.innerHTML = `
+          <tr><td colspan="5" style="text-align:center; color:red;">Error loading data</td></tr>`;
+      }
+    }
+
+    // Sidebar toggle
+    function toggleMenu() {
+      document.querySelector('.nav-menu').classList.toggle('show');
+    }
+
+    // Logout
+  function logout() {
+      alert("Logged out successfully!");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
