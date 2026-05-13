@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Dashboard - BloodLink</title>
+  <link rel="stylesheet" href="./Stylesheets/userdashboard.css" />
+  <link rel="icon" href="./images/blood drop.png" />
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <img src="./images/blood drop.png" alt="Logo">
+      <h2><span>BLOOD</span>LINK</h2>
+    </div>
+
+    <nav class="nav-menu">
+      <a href="./userdashboard.html" class="active">🏠 Dashboard</a>
+      <a href="./request.html">🩸 Request Blood</a>
+      <a href="./donate.html">❤️ Donate Blood</a>
+      <a href="./userrequests.html">📋 My Requests</a>
+      <a href="./usersettings.html">⚙️ Settings</a>
+      <a href="#" onclick="logout()">🚪 Logout</a>
+    </nav>
+
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Header -->
+    <header class="top-header">
+      <h1>Welcome back, <span id="userName">User</span> 👋</h1>
+      <div class="header-icons">
+        <button class="notif-btn" title="Notifications">🔔</button>
+      </div>
+    </header>
+
+    <!-- Dashboard Overview -->
+    <section id="dashboard" class="content-section active">
+      <p class="subtext">Here’s a quick overview of your recent activity on BloodLink.</p>
+
+      <!-- Dashboard Cards -->
+      <div class="dashboard-cards">
+        <div class="card">
+          <h2>🩸 Total Requests</h2>
+          <p><strong>3</strong> Active</p>
+        </div>
+
+        <div class="card">
+          <h2>❤️ Donations Made</h2>
+          <p><strong>2</strong> Completed</p>
+        </div>
+
+        <div class="card">
+          <h2>🏥 Nearby Blood Drives</h2>
+          <p><strong>1</strong> Upcoming</p>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <ul>
+          <li>🩸 Requested O+ blood at City Hospital — <span>Pending</span></li>
+          <li>❤️ Donated A+ blood at HealthCare Lab — <span>Completed</span></li>
+          <li>🏥 Registered for Blood Camp on Nov 10 — <span>Upcoming</span></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Toggle menu for mobile view
+    function toggleMenu() {
+      document.querySelector('.nav-menu').classList.toggle('show');
+    }
+
+    // Logout function
+    
+    function logout() {
+       localStorage.removeItem('token');
+      alert("Logged out successfully!");
+      window.location.href = "index.html";
+    }
+
+    // Example: Fetch user name from localStorage (if stored)
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.name) {
+        document.getElementById("userName").textContent = user.name;
+      }
+    });
+  </script>
+</body>
+</html>
