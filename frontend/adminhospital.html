@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospitals | BloodLink Admin</title>
+  <link rel="stylesheet" href="./Stylesheets/admindashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <style>
+    .hospital-card {
+      background: #fff;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hospital-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .map-btn {
+      background-color: #e63946;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .map-btn:hover {
+      background-color: #d62828;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <h2>🩸 BloodLink</h2>
+      </div>
+
+       <nav class="nav-menu">
+        <a href="./admindashboard.html" class="nav-item"><i class="fa fa-home"></i> Dashboard</a>
+        <a href="./adminuser.html" class="nav-item "><i class="fa fa-users"></i> Manage Users</a>
+        <a href="./adminrequests.html" class="nav-item"><i class="fa fa-tint"></i> Blood Requests</a>
+        <a href="./adminhospital.html" class="nav-item active"><i class="fa fa-hospital"></i> Hospitals</a>
+        <a href="./adminreports.html" class="nav-item"><i class="fa fa-chart-bar"></i> Reports</a>
+      </nav>
+
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <button class="menu-toggle" id="menuToggle"><i class="fa fa-bars"></i></button>
+        <h1>Hospitals</h1>
+      </header>
+
+      <section id="hospitalList" class="hospital-list"></section>
+    </main>
+  </div>
+
+  <script>
+    const hospitals = [
+      { name: "City Hospital", city: "Delhi", lat: 28.6139, lng: 77.2090 },
+      { name: "Global Care", city: "Mumbai", lat: 19.0760, lng: 72.8777 },
+      { name: "Red Cross Medical", city: "Pune", lat: 18.5204, lng: 73.8567 },
+      { name: "LifeLine Hospital", city: "Bengaluru", lat: 12.9716, lng: 77.5946 }
+    ];
+
+    const listContainer = document.getElementById("hospitalList");
+
+    hospitals.forEach(hospital => {
+      const div = document.createElement("div");
+      div.classList.add("hospital-card");
+      div.innerHTML = `
+        <div class="hospital-info">
+          <h3>${hospital.name}</h3>
+          <p>${hospital.city}</p>
+        </div>
+        <button class="map-btn" onclick="openMap(${hospital.lat}, ${hospital.lng})">
+          <i class="fa fa-map-marker-alt"></i> View on Map
+        </button>
+      `;
+      listContainer.appendChild(div);
+    });
+
+    function openMap(lat, lng) {
+      const url = `https://www.google.com/maps?q=${lat},${lng}`;
+      window.open(url, "_blank");
+    }
+
+    function logout() {
+      alert("Logged out successfully!");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
