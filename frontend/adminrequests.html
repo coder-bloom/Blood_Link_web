@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Requests | BloodLink Admin</title>
+  <link rel="stylesheet" href="./Stylesheets/admindashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    .status.pending { color: orange; font-weight: bold; }
+    .status.approved { color: green; font-weight: bold; }
+    .status.rejected { color: red; font-weight: bold; }
+    .approve-btn, .delete-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+    }
+    .approve-btn { background-color: #28a745; }
+    .delete-btn { background-color: #dc3545; }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <h2>🩸 BloodLink</h2>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="./admindashboard.html" class="nav-item"><i class="fa fa-home"></i> Dashboard</a>
+        <a href="./adminuser.html" class="nav-item"><i class="fa fa-users"></i> Manage Users</a>
+        <a href="./adminrequests.html active" class="nav-item active"><i class="fa fa-tint"></i> Blood Requests</a>
+        <a href="./adminhospital.html" class="nav-item"><i class="fa fa-hospital"></i> Hospitals</a>
+        <a href="./adminreports.html" class="nav-item"><i class="fa fa-chart-bar"></i> Reports</a>
+      </nav>
+
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header>
+        <button class="menu-toggle" id="menuToggle"><i class="fa fa-bars"></i></button>
+        <h1>Blood Requests</h1>
+      </header>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Requester Name</th>
+              <th>Blood Group</th>
+              <th>Hospital</th>
+              <th>City</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="requestsTableBody">
+            <tr><td colspan="6" style="text-align:center;">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+  const API_URL = "http://localhost:5000/api/requests";
+
+  // ✅ Load all requests dynamically
+  document.addEventListener("DOMContentLoaded", async () => {
+    const tableBody = document.getElementById("requestsTableBody");
+    try {
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error("Failed to fetch requests");
+      const requests = await res.json();
+      tableBody.innerHTML = "";
+
+      if (requests.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No blood requests found</td></tr>`;
+        return;
+      }
+
+      requests.forEach(req => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${req.fullName || "Unknown"}</td>
+          <td>${req.bloodGroup || "N/A"}</td>
+          <td>${req.hospital || "N/A"}</td>
+          <td>${req.city || "N/A"}</td>
+          <td><span class="status ${req.status?.toLowerCase()}">${req.status || "Pending"}</span></td>
+          <td>
+            <button class="approve-btn" onclick="updateStatus('${req._id}', 'Approved')">Approve</button>
+            <button class="delete-btn" onclick="deleteRequest('${req._id}')">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    } catch (err) {
+      console.error("Error loading requests:", err);
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Error loading data</td></tr>`;
+    }
+  });
+
+  // ✅ Update status (approve/reject)
+  async function updateStatus(id, status) {
+    try {
+      const res = await fetch(`${API_URL}/${id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+
+      if (res.ok) {
+        alert("Request status updated successfully!");
+        location.reload();
+      } else {
+        alert("Failed to update request status.");
+      }
+    } catch (err) {
+      console.error("Error updating status:", err);
+    }
+  }
+
+  // ✅ Delete request
+  async function deleteRequest(id) {
+    if (!confirm("Are you sure you want to delete this request?")) return;
+    try {
+      const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        alert("Request deleted successfully!");
+        location.reload();
+      } else {
+        alert("Failed to delete request.");
+      }
+    } catch (err) {
+      console.error("Error deleting request:", err);
+    }
+  }
+
+  // ✅ Logout
+  function logout() {
+    localStorage.removeItem("adminToken");
+    window.location.href = "./login.html";
+  }
+  </script>
+</body>
+</html>
