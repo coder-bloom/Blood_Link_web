@@ -1,0 +1,79 @@
+.settings-section {
+  padding: 40px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.settings-section h1 {
+  color: #9b0000;
+  margin-bottom: 10px;
+}
+
+.settings-section p {
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.settings-form {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 10px 0;
+}
+
+.btn {
+  background: #9b0000;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+  align-self: center;
+  width: 60%;
+}
+
+.btn:hover {
+  background: #c71c1c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .settings-section {
+    padding: 20px;
+  }
+
+  .settings-form {
+    padding: 20px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
